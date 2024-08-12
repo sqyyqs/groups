@@ -34,9 +34,18 @@ public class Main {
 
         setEdges(nodes, maxElements);
 
-        var connectedComponents = GraphUtils.findConnectedComponents(nodes);
+        List<Set<LineNode>> connectedComponents = GraphUtils.findConnectedComponents(nodes);
 
         System.out.println(connectedComponents.stream().filter(components -> components.size() > 1).count());
+
+        AtomicInteger atomicInteger = new AtomicInteger(1);
+        connectedComponents.stream()
+                .sorted((a, b) -> Integer.compare(b.size(), a.size()))
+                .forEach(connected -> {
+                    System.out.println("Группа " + atomicInteger.getAndIncrement());
+                    connected.forEach(node -> System.out.println(node.getLine()));
+                    System.out.println();
+                });
     }
 
     private static void setEdges(Set<LineNode> lineNodes, int maxElements) {
@@ -48,8 +57,7 @@ public class Main {
                 if (idx >= elements.length) {
                     continue;
                 }
-                if ("\"\"".equals(elements[idx]) || "".equals(elements[idx])
-                ) {
+                if ("\"\"".equals(elements[idx]) || "".equals(elements[idx])) {
                     continue;
                 }
                 columnBuffer.merge(elements[idx], lineNode, LineNode::addAdjNodeBiDirect);
