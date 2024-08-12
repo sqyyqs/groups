@@ -37,7 +37,6 @@ public class Main {
         setEdges(lineNodes, maxElements);
 
         List<List<LineNode>> connectedComponents = GraphUtils.findConnectedComponents(lineNodes);
-
         System.out.println(connectedComponents.stream().filter(components -> components.size() > 1).count());
 
         AtomicInteger atomicInteger = new AtomicInteger(1);

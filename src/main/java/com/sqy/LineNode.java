@@ -45,14 +45,14 @@ public class LineNode {
 
     @Override
     public int hashCode() {
-        return Objects.hash(line, adjNodes.stream().map(LineNode::getLine).toList());
+        return Objects.hash(line);
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("LineNode{");
         sb.append("line='").append(line).append('\'');
-        sb.append(", adjNodes(size)=").append(adjNodes.size());
+        sb.append(", adjNodes=").append(adjNodes.stream().map(LineNode::getLine).toList());
         sb.append('}');
         return sb.toString();
     }
