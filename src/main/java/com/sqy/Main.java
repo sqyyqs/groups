@@ -3,10 +3,7 @@ package com.sqy;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
@@ -18,25 +15,27 @@ public class Main {
     }
 
     public static void groupAppStart(String[] args) {
-        List<LineNode> lineNodes = new ArrayList<>();
-        int maxElements = Integer.MIN_VALUE;
+        Set<LineNode> nodes = new HashSet<>();
         if (args.length == 0) {
             throw new IllegalArgumentException("необходимо указать путь в аргументах командной строки");
         }
         try (BufferedReader reader = new BufferedReader(new FileReader(args[0]))) {
-            String line;
-            while (checkLine(line = reader.readLine())) {
-                LineNode lineNode = new LineNode(line);
-                lineNodes.add(lineNode);
-                maxElements = Math.max(maxElements, lineNode.getElements().length);
+            String buffer;
+            while(checkLine(buffer = reader.readLine())) {
+                nodes.add(new LineNode(buffer));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        int maxElements = Integer.MIN_VALUE;
+        for (LineNode node : nodes) {
+            maxElements = Math.max(maxElements, node.getElements().length);
+        }
 
-        setEdges(lineNodes, maxElements);
+        setEdges(nodes, maxElements);
 
-        List<List<LineNode>> connectedComponents = GraphUtils.findConnectedComponents(lineNodes);
+        List<List<LineNode>> connectedComponents = GraphUtils.findConnectedComponents(nodes);
+
         System.out.println(connectedComponents.stream().filter(components -> components.size() > 1).count());
 
         AtomicInteger atomicInteger = new AtomicInteger(1);
@@ -49,7 +48,7 @@ public class Main {
                 });
     }
 
-    private static void setEdges(List<LineNode> lineNodes, int maxElements) {
+    private static void setEdges(Set<LineNode> lineNodes, int maxElements) {
         // перебор по колонкам
         for (int idx = 0; idx < maxElements; idx++) {
             Map<String, LineNode> columnBuffer = new HashMap<>();
@@ -58,7 +57,7 @@ public class Main {
                 if (elements.length < (idx + 1)) {
                     continue;
                 }
-                if ("\"\"".equals(elements[idx])) {
+                if ("\"\"".equals(elements[idx]) || "".equals(elements[idx])) {
                     continue;
                 }
                 columnBuffer.merge(elements[idx], lineNode, LineNode::addAdjNode);

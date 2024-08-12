@@ -10,7 +10,7 @@ public class GraphUtils {
     private GraphUtils() {
     }
 
-    public static List<List<LineNode>> findConnectedComponents(List<LineNode> nodes) {
+    public static List<List<LineNode>> findConnectedComponents(Set<LineNode> nodes) {
         List<List<LineNode>> components = new ArrayList<>();
         Set<LineNode> visited = new HashSet<>();
 
