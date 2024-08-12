@@ -62,7 +62,6 @@ public class Main {
                 }
                 columnBuffer.merge(elements[idx], lineNode, LineNode::addAdjNodeBiDirect);
             }
-            columnBuffer.clear();
         }
     }
 
