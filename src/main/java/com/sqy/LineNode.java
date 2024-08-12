@@ -15,14 +15,12 @@ public class LineNode {
         this.elements = line.split(";");
     }
 
-    public LineNode addAdjNodeBidirect(LineNode lineNode) {
+    public LineNode addAdjNode(LineNode lineNode) {
+        if (this.equals(lineNode)) {
+            return this;
+        }
         adjNodes.add(lineNode);
-        lineNode.addAdjNode(this);
         return this;
-    }
-
-    private void addAdjNode(LineNode lineNode) {
-        adjNodes.add(lineNode);
     }
 
     public String getLine() {
@@ -42,12 +40,12 @@ public class LineNode {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LineNode lineNode = (LineNode) o;
-        return Objects.equals(line, lineNode.line) && Objects.equals(adjNodes, lineNode.adjNodes);
+        return Objects.equals(line, lineNode.line);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(line);
+        return Objects.hash(line, adjNodes.stream().map(LineNode::getLine).toList());
     }
 
     @Override

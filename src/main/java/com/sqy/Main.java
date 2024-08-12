@@ -21,7 +21,7 @@ public class Main {
         List<LineNode> lineNodes = new ArrayList<>();
         int maxElements = Integer.MIN_VALUE;
         if (args.length == 0) {
-            throw new IllegalArgumentException("необходимо указать путь в аргументах командой строки");
+            throw new IllegalArgumentException("необходимо указать путь в аргументах командной строки");
         }
         try (BufferedReader reader = new BufferedReader(new FileReader(args[0]))) {
             String line;
@@ -34,7 +34,6 @@ public class Main {
             e.printStackTrace();
         }
 
-        // перебор по колонкам
         setEdges(lineNodes, maxElements);
 
         List<List<LineNode>> connectedComponents = GraphUtils.findConnectedComponents(lineNodes);
@@ -52,6 +51,7 @@ public class Main {
     }
 
     private static void setEdges(List<LineNode> lineNodes, int maxElements) {
+        // перебор по колонкам
         for (int idx = 0; idx < maxElements; idx++) {
             Map<String, LineNode> columnBuffer = new HashMap<>();
             for (LineNode lineNode : lineNodes) {
@@ -62,7 +62,7 @@ public class Main {
                 if ("\"\"".equals(elements[idx])) {
                     continue;
                 }
-                columnBuffer.merge(elements[idx], lineNode, LineNode::addAdjNodeBidirect);
+                columnBuffer.merge(elements[idx], lineNode, LineNode::addAdjNode);
             }
             columnBuffer.clear();
         }
@@ -70,6 +70,6 @@ public class Main {
 
 
     private static boolean checkLine(String line) {
-        return line != null && line.substring(1, line.length() - 1).contains("\"");
+        return line != null && line.chars().filter(ch -> ch == '"').count() % 2 == 0;
     }
 }
