@@ -10,29 +10,29 @@ public class GraphUtils {
     private GraphUtils() {
     }
 
-    public static List<List<LineNode>> findConnectedComponents(Set<LineNode> nodes) {
-        List<List<LineNode>> components = new ArrayList<>();
+    public static List<Set<LineNode>> findConnectedComponents(Set<LineNode> graph) {
+        List<Set<LineNode>> components = new ArrayList<>();
         Set<LineNode> visited = new HashSet<>();
 
-        for (LineNode node : nodes) {
+        for (LineNode node : graph) {
             if (!visited.contains(node)) {
-                List<LineNode> component = new ArrayList<>();
+                Set<LineNode> component = new HashSet<>();
                 dfs(node, visited, component);
                 components.add(component);
             }
         }
-
         return components;
     }
 
-    private static void dfs(LineNode node, Set<LineNode> visited, List<LineNode> component) {
+    private static void dfs(LineNode node, Set<LineNode> visited, Set<LineNode> component) {
         visited.add(node);
         component.add(node);
 
-        for (LineNode adjNode : node.getAdjNodes()) {
-            if (!visited.contains(adjNode)) {
-                dfs(adjNode, visited, component);
+        for (LineNode neighbor : node.getAdjNodes()) {
+            if (!visited.contains(neighbor)) {
+                dfs(neighbor, visited, component);
             }
         }
     }
+
 }

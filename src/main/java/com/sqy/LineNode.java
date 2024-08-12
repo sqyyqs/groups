@@ -1,18 +1,23 @@
 package com.sqy;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class LineNode {
 
     private final String line;
-    private final List<LineNode> adjNodes = new ArrayList<>();
+    private final Set<LineNode> adjNodes = new HashSet<>();
     private final String[] elements;
 
     public LineNode(String line) {
         this.line = line;
         this.elements = line.split(";");
+    }
+
+
+    public LineNode addAdjNodeBiDirect(LineNode lineNode) {
+        adjNodes.add(lineNode);
+        lineNode.addAdjNode(this);
+        return this;
     }
 
     public LineNode addAdjNode(LineNode lineNode) {
@@ -23,6 +28,7 @@ public class LineNode {
         return this;
     }
 
+
     public String getLine() {
         return line;
     }
@@ -31,7 +37,7 @@ public class LineNode {
         return elements;
     }
 
-    public List<LineNode> getAdjNodes() {
+    public Set<LineNode> getAdjNodes() {
         return adjNodes;
     }
 

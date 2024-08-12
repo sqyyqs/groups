@@ -21,7 +21,7 @@ public class Main {
         }
         try (BufferedReader reader = new BufferedReader(new FileReader(args[0]))) {
             String buffer;
-            while(checkLine(buffer = reader.readLine())) {
+            while (checkLine(buffer = reader.readLine())) {
                 nodes.add(new LineNode(buffer));
             }
         } catch (IOException e) {
@@ -34,18 +34,9 @@ public class Main {
 
         setEdges(nodes, maxElements);
 
-        List<List<LineNode>> connectedComponents = GraphUtils.findConnectedComponents(nodes);
+        var connectedComponents = GraphUtils.findConnectedComponents(nodes);
 
         System.out.println(connectedComponents.stream().filter(components -> components.size() > 1).count());
-
-        AtomicInteger atomicInteger = new AtomicInteger(1);
-        connectedComponents.stream()
-                .sorted((a, b) -> Integer.compare(b.size(), a.size()))
-                .forEach(connected -> {
-                    System.out.println("Группа " + atomicInteger.getAndIncrement());
-                    connected.forEach(node -> System.out.println(node.getLine()));
-                    System.out.println();
-                });
     }
 
     private static void setEdges(Set<LineNode> lineNodes, int maxElements) {
@@ -54,13 +45,14 @@ public class Main {
             Map<String, LineNode> columnBuffer = new HashMap<>();
             for (LineNode lineNode : lineNodes) {
                 String[] elements = lineNode.getElements();
-                if (elements.length < (idx + 1)) {
+                if (idx >= elements.length) {
                     continue;
                 }
-                if ("\"\"".equals(elements[idx]) || "".equals(elements[idx])) {
+                if ("\"\"".equals(elements[idx]) || "".equals(elements[idx])
+                ) {
                     continue;
                 }
-                columnBuffer.merge(elements[idx], lineNode, LineNode::addAdjNode);
+                columnBuffer.merge(elements[idx], lineNode, LineNode::addAdjNodeBiDirect);
             }
             columnBuffer.clear();
         }
