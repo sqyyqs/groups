@@ -34,6 +34,7 @@ public class Main {
         List<Set<LineNode>> connectedComponents = GraphUtils.findConnectedComponents(nodes)
                 .stream()
                 .filter(connectedComponent -> connectedComponent.size() > 1)
+                .sorted((a, b) -> Integer.compare(b.size(), a.size()))
                 .toList();
 
         writeResult("result.txt", connectedComponents);
