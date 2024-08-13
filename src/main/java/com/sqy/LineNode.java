@@ -21,10 +21,9 @@ public class LineNode {
     }
 
     public LineNode addAdjNode(LineNode lineNode) {
-        if (this.equals(lineNode)) {
-            return this;
+        if (!this.equals(lineNode)) {
+            adjNodes.add(lineNode);
         }
-        adjNodes.add(lineNode);
         return this;
     }
 

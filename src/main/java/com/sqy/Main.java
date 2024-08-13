@@ -1,10 +1,7 @@
 package com.sqy;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
 
@@ -34,18 +31,12 @@ public class Main {
 
         setEdges(nodes, maxElements);
 
-        List<Set<LineNode>> connectedComponents = GraphUtils.findConnectedComponents(nodes);
+        List<Set<LineNode>> connectedComponents = GraphUtils.findConnectedComponents(nodes)
+                .stream()
+                .filter(connectedComponent -> connectedComponent.size() > 1)
+                .toList();
 
-        System.out.println(connectedComponents.stream().filter(components -> components.size() > 1).count());
-
-        AtomicInteger atomicInteger = new AtomicInteger(1);
-        connectedComponents.stream()
-                .sorted((a, b) -> Integer.compare(b.size(), a.size()))
-                .forEach(connected -> {
-                    System.out.println("Группа " + atomicInteger.getAndIncrement());
-                    connected.forEach(node -> System.out.println(node.getLine()));
-                    System.out.println();
-                });
+        writeResult("result.txt", connectedComponents);
     }
 
     private static void setEdges(Set<LineNode> lineNodes, int maxElements) {
@@ -68,5 +59,21 @@ public class Main {
 
     private static boolean checkLine(String line) {
         return line != null && line.chars().filter(ch -> ch == '"').count() % 2 == 0;
+    }
+
+    private static void writeResult(String fileName, List<Set<LineNode>> connectedComponents) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(connectedComponents.size() + "\n\n");
+            int counter = 1;
+            for (Set<LineNode> connectedComponent : connectedComponents) {
+                writer.write("Группа " + (counter++) + '\n');
+                for (LineNode node : connectedComponent) {
+                    writer.write(node.getLine() + '\n');
+                }
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
